@@ -4,8 +4,8 @@ import os
 import sys
 
 from selfdrive.car.car_helpers import interface_names
-from selfdrive.test.process_replay.process_replay import replay_process, CONFIGS
-from selfdrive.test.process_replay.compare_logs import compare_logs
+from selfdrive.test.replay.process_replay import replay_process, CONFIGS
+from selfdrive.test.replay.compare_logs import compare_logs
 from tools.lib.logreader import LogReader
 
 
@@ -40,8 +40,8 @@ def get_segment(segment_name, original=True):
   if original:
     rlog_url = BASE_URL + "%s/%s/rlog.bz2" % (route_name.replace("|", "/"), segment_num)
   else:
-    process_replay_dir = os.path.dirname(os.path.abspath(__file__))
-    model_ref_commit = open(os.path.join(process_replay_dir, "model_ref_commit")).read().strip()
+    replay_dir = os.path.dirname(os.path.abspath(__file__))
+    model_ref_commit = open(os.path.join(replay_dir, "model_ref_commit")).read().strip()
     rlog_url = BASE_URL + "%s/%s/rlog_%s.bz2" % (route_name.replace("|", "/"), segment_num, model_ref_commit)
 
   return rlog_url
@@ -119,9 +119,9 @@ if __name__ == "__main__":
   cars_whitelisted = len(args.whitelist_cars) > 0
   procs_whitelisted = len(args.whitelist_procs) > 0
 
-  process_replay_dir = os.path.dirname(os.path.abspath(__file__))
+  replay_dir = os.path.dirname(os.path.abspath(__file__))
   try:
-    ref_commit = open(os.path.join(process_replay_dir, "ref_commit")).read().strip()
+    ref_commit = open(os.path.join(replay_dir, "ref_commit")).read().strip()
   except:
     print("couldn't find reference commit")
     sys.exit(1)
@@ -152,11 +152,11 @@ if __name__ == "__main__":
           (not procs_whitelisted and cfg.proc_name in args.blacklist_procs):
         continue
 
-      cmp_log_fn = os.path.join(process_replay_dir, "%s_%s_%s.bz2" % (segment, cfg.proc_name, ref_commit))
+      cmp_log_fn = os.path.join(replay_dir, "%s_%s_%s.bz2" % (segment, cfg.proc_name, ref_commit))
       results[segment][cfg.proc_name] = test_process(cfg, lr, cmp_log_fn, args.ignore_fields, args.ignore_msgs)
 
   diff1, diff2, failed = format_diff(results, ref_commit)
-  with open(os.path.join(process_replay_dir, "diff.txt"), "w") as f:
+  with open(os.path.join(replay_dir, "diff.txt"), "w") as f:
     f.write(diff2)
   print(diff1)
 

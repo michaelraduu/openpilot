@@ -130,7 +130,7 @@ jobs:
         run: |
           $PERSIST "cd /tmp/openpilot && \
                     scons -j$(nproc) && \
-                    CI=1 coverage run selfdrive/test/process_replay/test_processes.py"
+                    CI=1 coverage run selfdrive/test/replay/test_processes.py"
       - name: Upload coverage to Codecov
         run: |
           docker commit tmppilot tmppilotci
@@ -138,7 +138,7 @@ jobs:
       - name: Print diff
         if: always()
         run: |
-          docker cp tmppilot:/tmp/openpilot/selfdrive/test/process_replay/diff.txt diff.txt
+          docker cp tmppilot:/tmp/openpilot/selfdrive/test/replay/diff.txt diff.txt
           cat diff.txt
       - uses: actions/upload-artifact@v2
         if: always()

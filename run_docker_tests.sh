@@ -19,5 +19,5 @@ $RUN "$BUILD python -m unittest discover common && \
              python -m unittest discover selfdrive/locationd && \
              python -m unittest discover selfdrive/athena"
 $RUN "$BUILD cd /tmp/openpilot/selfdrive/test/longitudinal_maneuvers && OPTEST=1 ./test_longitudinal.py"
-$RUN "$BUILD cd /tmp/openpilot/selfdrive/test/process_replay/ && ./test_processes.py"
+$RUN "$BUILD cd /tmp/openpilot/selfdrive/test/replay/ && ./test_processes.py"
 $RUN "$BUILD mkdir -p /data/params && cd /tmp/openpilot/selfdrive/test/ && ./test_car_models.py"

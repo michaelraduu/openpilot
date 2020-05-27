@@ -3,9 +3,9 @@ import os
 import sys
 
 from selfdrive.test.openpilotci_upload import upload_file
-from selfdrive.test.process_replay.compare_logs import save_log
-from selfdrive.test.process_replay.process_replay import replay_process, CONFIGS
-from selfdrive.test.process_replay.test_processes import segments, get_segment
+from selfdrive.test.replay.compare_logs import save_log
+from selfdrive.test.replay.replay import replay_process, CONFIGS
+from selfdrive.test.replay.test_processes import segments, get_segment
 from selfdrive.version import get_git_commit
 from tools.lib.logreader import LogReader
 
@@ -13,8 +13,8 @@ if __name__ == "__main__":
 
   no_upload = "--no-upload" in sys.argv
 
-  process_replay_dir = os.path.dirname(os.path.abspath(__file__))
-  ref_commit_fn = os.path.join(process_replay_dir, "ref_commit")
+  replay_dir = os.path.dirname(os.path.abspath(__file__))
+  ref_commit_fn = os.path.join(replay_dir, "ref_commit")
 
   ref_commit = get_git_commit()
   with open(ref_commit_fn, "w") as f:
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     for cfg in CONFIGS:
       log_msgs = replay_process(cfg, lr)
-      log_fn = os.path.join(process_replay_dir, "%s_%s_%s.bz2" % (segment, cfg.proc_name, ref_commit))
+      log_fn = os.path.join(replay_dir, "%s_%s_%s.bz2" % (segment, cfg.proc_name, ref_commit))
       save_log(log_fn, log_msgs)
 
       if not no_upload:
